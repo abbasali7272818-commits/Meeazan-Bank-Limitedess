@@ -1,0 +1,22 @@
+{
+  "short_name": "Meezan Roshan",
+  "name": "Meezan Roshan Digital Account",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2830/2830284.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2830/2830284.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/index.html",
+  "background_color": "#1e3a8a",
+  "theme_color": "#1e3a8a",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": "/"
+}
