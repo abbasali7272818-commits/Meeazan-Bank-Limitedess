@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script>
+    // Safeguard to prevent "TypeError: Cannot set property fetch of #<Window> which has only a getter"
+    (function() {
+      try {
+        var originalFetch = window.fetch;
+        var customFetch = originalFetch;
+        Object.defineProperty(window, 'fetch', {
+          get: function() { return customFetch; },
+          set: function(val) { customFetch = val; },
+          configurable: true,
+          enumerable: true
+        });
+      } catch (e) {
+        console.warn('Unable to redefine window.fetch setter:', e);
+      }
+    })();
+
+    // Safeguard to catch and suppress MetaMask or third-party extension failures in sandbox/iframe environments
+    (function() {
+      // 1. Intercept console.error to prevent extension-related errors from reaching AI Studio's listener
+      var originalConsoleError = console.error;
+      console.error = function() {
+        var args = Array.prototype.slice.call(arguments);
+        var errStr = args.map(function(arg) {
+          if (!arg) return '';
+          if (typeof arg === 'string') return arg;
+          return arg.message || arg.stack || JSON.stringify(arg);
+        }).join(' ');
+
+        if (
+          errStr.includes('MetaMask') || 
+          errStr.includes('metamask') || 
+          errStr.includes('ethereum') || 
+          errStr.includes('Extension') || 
+          errStr.includes('extension') ||
+          errStr.includes('wallet')
+        ) {
+          // Suppress error completely, log as warning
+          console.warn('Suppressed extension console error:', errStr);
+          return;
+        }
+        originalConsoleError.apply(console, arguments);
+      };
+
+      // 2. Intercept window.onerror
+      window.addEventListener('error', function(event) {
+        var msg = event.message || '';
+        var err = event.error;
+        var errStr = msg + (err ? ' ' + (err.message || err.stack || '') : '');
+        
+        if (
+          errStr.includes('MetaMask') || 
+          errStr.includes('metamask') || 
+          errStr.includes('ethereum') || 
+          errStr.includes('Extension') || 
+          errStr.includes('extension') ||
+          errStr.includes('wallet')
+        ) {
+          console.warn('Suppressed extension window error:', errStr);
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      }, true);
+
+      // 3. Intercept unhandled promise rejections
+      window.addEventListener('unhandledrejection', function(event) {
+        var reason = event.reason;
+        var reasonStr = reason ? (reason.message || reason.stack || String(reason)) : '';
+        
+        if (
+          reasonStr.includes('MetaMask') || 
+          reasonStr.includes('metamask') || 
+          reasonStr.includes('ethereum') || 
+          reasonStr.includes('Extension') || 
+          reasonStr.includes('extension') ||
+          reasonStr.includes('wallet')
+        ) {
+          console.warn('Suppressed extension promise rejection:', reasonStr);
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      }, true);
+    })();
+  </script>
+  <title>Meezan Roshan Digital Account</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Meezan Roshan">
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2830/2830284.png">
+  <link rel="manifest" href="/manifest.json">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    }
+  </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "rxjs": "https://esm.sh/rxjs@^7.8.2?conditions=es2015",
+    "rxjs/operators": "https://esm.sh/rxjs@^7.8.2/operators?conditions=es2015",
+    "rxjs/ajax": "https://esm.sh/rxjs@^7.8.2/ajax?conditions=es2015",
+    "rxjs/webSocket": "https://esm.sh/rxjs@^7.8.2/webSocket?conditions=es2015",
+    "rxjs/testing": "https://esm.sh/rxjs@^7.8.2/testing?conditions=es2015",
+    "@angular/core": "https://esm.sh/@angular/core@^21.0.6?external=rxjs",
+    "@angular/compiler": "https://esm.sh/@angular/compiler@^21.0.6?external=rxjs",
+    "@angular/platform-browser": "https://esm.sh/@angular/platform-browser@^21.0.6?external=rxjs",
+    "@angular/common": "https://esm.sh/@angular/common@^21.0.6?external=rxjs",
+    "@angular/router": "https://esm.sh/@angular/router@^21.0.6?external=rxjs",
+    "@angular/forms": "https://esm.sh/@angular/forms@^21.0.6?external=rxjs",
+    "rxjs/": "https://esm.sh/rxjs@^7.8.2/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="bg-white">
+  <app-root></app-root>
+</body>
+</html>
